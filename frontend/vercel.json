@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/tour", "destination": "/why-benchbook", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/shared/:token", "destination": "/api/share-preview?token=:token" },
+    {
+      "source": "/:section(login|onboarding|dashboard|protocols|reagents|import|runs|statistics|settings)/:rest*",
+      "destination": "/app"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/:section(login|onboarding|dashboard|protocols|reagents|import|runs|statistics|settings|shared|app)/:rest*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }]
+    }
+  ]
+}

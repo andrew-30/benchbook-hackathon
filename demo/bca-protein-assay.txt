@@ -1,0 +1,31 @@
+BCA Protein Assay (Microplate Procedure)
+
+Purpose: Determine total protein concentration of cell lysates before SDS-PAGE loading.
+
+Materials
+- Pierce BCA Protein Assay Kit (Reagent A and Reagent B), Thermo Fisher, cat. 23225
+- Bovine serum albumin (BSA) standard, 2 mg/mL, Thermo Fisher, cat. 23209
+- RIPA lysis buffer, Sigma-Aldrich, cat. R0278
+- 96-well clear flat-bottom microplate
+- Multichannel pipette (20-200 uL)
+- Plate reader capable of reading absorbance at 562 nm
+- Incubator set to 37 C
+
+Section 1: Prepare standards
+1. Thaw the BSA standard on ice and vortex briefly.
+2. Prepare a dilution series of BSA in RIPA buffer at 2000, 1500, 1000, 750, 500, 250, 125, 25 and 0 ug/mL. Final volume of each standard should be 100 uL.
+3. Keep standards on ice until use.
+
+Section 2: Prepare working reagent
+4. Calculate the volume of working reagent required: (number of standards + number of samples) x 2 replicates x 200 uL, plus 10% extra.
+5. Mix Reagent A and Reagent B at a 50:1 ratio. The solution should turn clear green. Record the total volume prepared (mL).
+
+Section 3: Run the assay
+6. Pipette 25 uL of each standard and each unknown sample into the plate in duplicate.
+7. Add 200 uL of working reagent to every well using the multichannel pipette.
+8. Cover the plate and mix on a plate shaker for 30 seconds.
+9. Incubate the plate at 37 C for 30 minutes.
+10. Cool the plate to room temperature for 5 minutes.
+11. Read absorbance at 562 nm. Record the blank-corrected absorbance of the 2000 ug/mL standard (expected range 1.8 - 2.4).
+12. Fit a linear standard curve and record the R-squared value (acceptable if 0.98 or higher).
+13. Calculate sample concentrations from the curve and record the mean sample concentration in ug/mL.

@@ -1,0 +1,366 @@
+/* ---------------------------------------------------------------------------
+   Landing page ("/") motion system — Modern Confident, "bold and immersive".
+
+   Rules this file follows throughout:
+   1. Every hide-then-reveal rule is scoped under `.landing.motion-ready` so a
+      visitor with no JavaScript (or a crawler/pre-render pass) always gets
+      the final, fully-visible layout — see useMotionReady()/useReveal() in
+      src/components/marketing/useReveal.ts for the React half of this.
+   2. All continuous decorative motion (Ken Burns, drift, parallax) is gated
+      under `@media (prefers-reduced-motion: no-preference)` — reduced-motion
+      visitors get the static end state, never a frozen mid-animation frame.
+   3. Only `transform`/`opacity` (and SVG `stroke-dashoffset`) are animated —
+      no layout-shifting properties.
+   4. Shared easing/duration scale lives in the custom properties below so
+      every section moves with the same rhythm.
+--------------------------------------------------------------------------- */
+
+:root {
+  --bb-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --bb-dur-fast: 180ms;
+  --bb-dur: 320ms;
+  --bb-dur-slow: 520ms;
+}
+
+/* --------------------------------------------------------------------- */
+/* Generic scroll-reveal (IntersectionObserver-driven via useReveal())    */
+/* --------------------------------------------------------------------- */
+.landing.motion-ready .reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity var(--bb-dur-slow) var(--bb-ease), transform var(--bb-dur-slow) var(--bb-ease);
+  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+.landing.motion-ready .reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing.motion-ready .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* Header — frosted glass once the page has scrolled a little            */
+/* --------------------------------------------------------------------- */
+.landing-header {
+  transition: background-color var(--bb-dur) var(--bb-ease), box-shadow var(--bb-dur) var(--bb-ease),
+    border-color var(--bb-dur) var(--bb-ease);
+}
+.landing-header.is-scrolled {
+  box-shadow: 0 8px 24px rgba(23, 19, 42, 0.06);
+}
+
+/* --------------------------------------------------------------------- */
+/* Hero                                                                   */
+/* --------------------------------------------------------------------- */
+.hero-word {
+  display: inline-block;
+  opacity: 1;
+  transform: none;
+}
+.hero:not(.hero-ready) .hero-word {
+  opacity: 0;
+  transform: translateY(0.5em);
+}
+.hero.hero-ready .hero-word {
+  transition: opacity var(--bb-dur-slow) var(--bb-ease), transform var(--bb-dur-slow) var(--bb-ease);
+  transition-delay: calc(var(--w-i, 0) * 55ms);
+}
+
+.hero-cta,
+.hero-mockup {
+  opacity: 1;
+  transform: none;
+}
+.hero:not(.hero-ready) .hero-cta {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.hero:not(.hero-ready) .hero-mockup {
+  opacity: 0;
+  transform: scale(0.96) translateY(12px);
+}
+.hero.hero-ready .hero-cta {
+  transition: opacity var(--bb-dur-slow) var(--bb-ease), transform var(--bb-dur-slow) var(--bb-ease);
+  transition-delay: 480ms;
+}
+.hero.hero-ready .hero-mockup {
+  transition: opacity var(--bb-dur-slow) var(--bb-ease), transform var(--bb-dur-slow) var(--bb-ease);
+  transition-delay: 260ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero:not(.hero-ready) .hero-word,
+  .hero:not(.hero-ready) .hero-cta,
+  .hero:not(.hero-ready) .hero-mockup {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+.hero-photo {
+  transform: scale(1.06);
+}
+/* Desktop only: a photo that never stops moving is pleasant behind a wide
+   hero and actively annoying on a phone held in one hand. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+  .hero-photo {
+    animation: bb-kenburns 22s var(--bb-ease) infinite alternate;
+  }
+}
+@keyframes bb-kenburns {
+  from {
+    transform: scale(1.06) translate(0, 0);
+  }
+  to {
+    transform: scale(1.14) translate(-1%, -1%);
+  }
+}
+
+/* Live badge / checkbox / countdown pop-ins inside the hero + story mockups */
+@keyframes bb-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.bb-pop-in {
+  animation: bb-pop-in var(--bb-dur) var(--bb-ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bb-pop-in {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* Pinned scroll story                                                    */
+/* --------------------------------------------------------------------- */
+.story-frame-sticky {
+  position: sticky;
+  top: 6.5rem;
+}
+.story-rail {
+  position: relative;
+  width: 3px;
+  border-radius: 2px;
+  background: #ece7f2;
+}
+.story-rail-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border-radius: 2px;
+  background: #6366f1;
+  transition: height var(--bb-dur-slow) var(--bb-ease);
+}
+.story-pane {
+  transition: opacity var(--bb-dur-slow) var(--bb-ease);
+}
+.story-pane:not(.is-active) {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+.story-pane.is-active {
+  opacity: 1;
+  position: relative;
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-pane {
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* "Built for the bench" parallax band                                   */
+/* --------------------------------------------------------------------- */
+.parallax-band {
+  overflow: hidden;
+}
+.parallax-photo {
+  transform: translateY(0);
+}
+/* Scroll-linked parallax is desktop-only. Chrome on Android supports
+   `animation-timeline: view()`, so on a phone this photo tracks the scroll
+   position — the page appears to keep moving while you are trying to tap it.
+   `will-change` lives inside the gate too, so mobile never pays for a
+   permanently promoted compositor layer holding a full-bleed image. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+    .parallax-photo {
+      animation: bb-parallax-y linear both;
+      animation-timeline: view();
+      animation-range: cover;
+      will-change: transform;
+    }
+  }
+}
+@keyframes bb-parallax-y {
+  from {
+    transform: translateY(-8%);
+  }
+  to {
+    transform: translateY(8%);
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* Reagent tracking band                                                  */
+/* --------------------------------------------------------------------- */
+@keyframes bb-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px);
+  }
+  40% {
+    transform: translateX(4px);
+  }
+  60% {
+    transform: translateX(-3px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+.bb-shake {
+  animation: bb-shake 420ms var(--bb-ease) both;
+}
+@keyframes bb-drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.bb-drop-in {
+  animation: bb-drop-in var(--bb-dur-slow) var(--bb-ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bb-shake,
+  .bb-drop-in {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* How it works — self-drawing line                                      */
+/* --------------------------------------------------------------------- */
+.hiw-line-path {
+  transition: transform var(--bb-dur-slow) var(--bb-ease);
+}
+.hiw-step-icon {
+  transition: background-color var(--bb-dur) var(--bb-ease), color var(--bb-dur) var(--bb-ease);
+}
+.hiw-step-text {
+  transition: color var(--bb-dur) var(--bb-ease);
+}
+
+/* --------------------------------------------------------------------- */
+/* Complete records                                                       */
+/* --------------------------------------------------------------------- */
+.records-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  vertical-align: -0.15em;
+  background: currentColor;
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+  .records-cursor {
+    animation: bb-blink 1s steps(1) infinite;
+  }
+}
+@keyframes bb-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.records-bar {
+  transform: scaleY(1);
+  transform-origin: bottom;
+}
+.landing.motion-ready .records-bar:not(.is-in) {
+  transform: scaleY(0);
+}
+.landing.motion-ready .records-bar.is-in {
+  transition: transform var(--bb-dur-slow) var(--bb-ease);
+  transition-delay: calc(var(--bar-i, 0) * 90ms);
+}
+.records-pdf {
+  transform: rotate(0deg) translateY(0);
+  opacity: 1;
+}
+.landing.motion-ready .records-pdf:not(.is-in) {
+  transform: rotate(-6deg) translateY(14px);
+  opacity: 0;
+}
+.landing.motion-ready .records-pdf.is-in {
+  transition: transform var(--bb-dur-slow) var(--bb-ease), opacity var(--bb-dur-slow) var(--bb-ease);
+  transition-delay: 180ms;
+}
+
+/* --------------------------------------------------------------------- */
+/* Final CTA — drifting sample-tube texture                               */
+/* --------------------------------------------------------------------- */
+.drift-photo {
+  transform: translate(0, 0) scale(1.05);
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
+  .drift-photo {
+    animation: bb-drift 16s var(--bb-ease) infinite alternate;
+  }
+}
+@keyframes bb-drift {
+  from {
+    transform: translate(0, 0) scale(1.05);
+  }
+  to {
+    transform: translate(-1.5%, 1.5%) scale(1.1);
+  }
+}
+
+/* --------------------------------------------------------------------- */
+/* FAQ — smooth open/close on native <details>                           */
+/* --------------------------------------------------------------------- */
+.faq-answer {
+  display: block; /* overrides the UA's display:none while <details> is closed */
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height var(--bb-dur-slow) var(--bb-ease), opacity var(--bb-dur) var(--bb-ease),
+    margin-top var(--bb-dur-slow) var(--bb-ease);
+}
+details[open] > .faq-answer {
+  max-height: 480px;
+  opacity: 1;
+  margin-top: 0.75rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .faq-answer {
+    transition: none;
+  }
+}

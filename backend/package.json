@@ -1,0 +1,42 @@
+{
+  "name": "benchbook-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/index.js",
+    "migrate": "tsx scripts/migrate.ts",
+    "migrate:status": "node scripts/migration-status.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "postinstall": "echo 'No postinstall steps'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "@sentry/node": "^10.55.0",
+    "@sentry/profiling-node": "^10.55.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.5.2",
+    "helmet": "^8.0.0",
+    "mammoth": "^1.8.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.0",
+    "sanitize-html": "^2.17.4",
+    "unpdf": "^1.8.1",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.7.4",
+    "@types/pg": "^8.11.10",
+    "@types/sanitize-html": "^2.16.1",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}

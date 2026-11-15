@@ -1,0 +1,343 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-canvas text-ink antialiased;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    /* Prevent Chrome Android pull-to-refresh from accidentally firing mid-experiment. */
+    overscroll-behavior-y: none;
+  }
+  /*
+   * Base font size of 16px on form controls prevents iOS Safari from zooming
+   * on focus. Pages that want bigger inputs (e.g. RunExecution measurement
+   * fields) override locally — see the `.bb-input-large` utility below.
+   */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  button {
+    /* No 300ms tap delay on touch devices. */
+    touch-action: manipulation;
+  }
+  /* Modern Confident — serif display headings (Georgia stack) for page titles.
+     Numeric/data displays that must stay in the tabular sans set their own
+     font locally (e.g. the RunExecution timer, .bb-input-large). */
+  h1,
+  h2 {
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer components {
+  .bb-card {
+    /* Modern Confident: white card on the white ground, separated by a soft
+       lilac hairline (#ece7f2) and an airy two-layer shadow. Rounder 20px
+       corners. Shadow tints toward the ink hue rather than pure black. */
+    background-color: #ffffff;
+    border: 1px solid #ece7f2;
+    border-radius: 20px;
+    box-shadow:
+      0 2px 8px rgba(23, 19, 42, 0.05),
+      0 14px 34px rgba(23, 19, 42, 0.06);
+    transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+    cursor: default;
+  }
+  .bb-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 14px rgba(23, 19, 42, 0.08),
+      0 18px 40px rgba(23, 19, 42, 0.08);
+  }
+  /* All buttons hit a minimum 44px touch target. The default browser line-height
+     on small buttons can drop below that; explicit min-h fixes it. */
+  .bb-btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-card text-sm font-medium min-h-[44px];
+    transition: transform 100ms ease-out, opacity 100ms ease-out,
+      background-color 150ms ease-out, color 150ms ease-out;
+  }
+  .bb-btn:active {
+    transform: scale(0.97);
+    opacity: 0.9;
+  }
+  .bb-btn-primary {
+    @apply bb-btn bg-primary text-white hover:opacity-90 disabled:opacity-50;
+  }
+  .bb-btn-ghost {
+    @apply bb-btn bg-white text-ink border border-line hover:bg-neutral-50;
+  }
+  /* Standard input — comfortable on touch (52px) without triggering iOS zoom. */
+  .bb-input {
+    @apply w-full px-3 py-2 rounded-card border border-line bg-white text-base focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary min-h-[52px];
+  }
+  /* RunExecution measurement input — taller, centred, larger digits. Only
+     used on the dark "Focus" execution page, so it carries the dark-ground
+     treatment directly rather than a light default + override. */
+  .bb-input-large {
+    @apply w-full px-4 rounded-card font-mono text-center focus:outline-none focus:ring-2 focus:ring-[#8b90f8]/40;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #f6f4fd;
+    height: 56px;
+    font-size: 20px;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 150ms ease-out;
+  }
+  @media (min-width: 768px) {
+    .bb-input-large {
+      height: 52px;
+      font-size: 18px;
+    }
+  }
+  /* Tri-state tolerance borders — icon + label carry the meaning, colour is
+     reinforcement only (see the status pill markup in RunExecution). */
+  .bb-input-large--within {
+    border-color: rgba(74, 222, 128, 0.55);
+  }
+  .bb-input-large--outside-tol {
+    border-color: rgba(251, 191, 36, 0.6);
+  }
+  .bb-input-large--out-of-spec {
+    border-color: rgba(248, 113, 113, 0.6);
+  }
+  .bb-label {
+    @apply block text-sm font-medium text-neutral-700 mb-1;
+  }
+  /* Sticky bottom action bar (RunExecution etc) that respects the iOS home
+     indicator. The fallback pb-2 catches browsers without env() support. */
+  .bb-safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* RunExecution — "Focus, elevated dark"                              */
+/*                                                                     */
+/* The execution page (/runs/:id/execute) intentionally lives outside */
+/* AppLayout and stays dark full-bleed — a run should feel like focus */
+/* mode. These are the only dark-surface component classes in the     */
+/* app; everywhere else uses the light Modern Confident surface above.*/
+/* ------------------------------------------------------------------ */
+@layer components {
+  .bb-exec-ground {
+    background: radial-gradient(120% 90% at 50% -10%, #221a44 0%, #140f28 55%, #100b20 100%);
+    color: #ece9f8;
+  }
+  .bb-exec-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+  }
+  .bb-exec-chip {
+    @apply flex shrink-0 items-center justify-center rounded-2xl;
+    background: rgba(139, 144, 248, 0.16);
+    color: #b7bbfb;
+  }
+  .bb-exec-icon-btn {
+    @apply flex items-center justify-center rounded-full;
+    width: 44px;
+    height: 44px;
+    color: #cfccdf;
+    transition: background-color 150ms ease-out;
+  }
+  .bb-exec-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  /* Ghost buttons on the dark ground — ≥52px so they stay gloved-tap-safe
+     next to the primary buttons in the timer + action bar. */
+  .bb-exec-btn-ghost {
+    @apply bb-btn;
+    min-height: 52px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #cfccdf;
+  }
+  .bb-exec-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .bb-exec-btn-ghost:disabled {
+    opacity: 0.45;
+  }
+  /* "Log deviation" — purple-tinted so it reads as a distinct, deliberate
+     action next to the neutral ghost buttons and the primary Complete. */
+  .bb-exec-btn-deviation {
+    @apply bb-btn;
+    min-height: 52px;
+    background: rgba(216, 180, 254, 0.1);
+    border: 1px solid rgba(216, 180, 254, 0.28);
+    color: #d8b4fe;
+  }
+  .bb-exec-btn-deviation:hover {
+    background: rgba(216, 180, 254, 0.16);
+  }
+  /* Text fields on the dark ground (notes, deviation description + type). */
+  .bb-exec-field {
+    @apply w-full rounded-card px-3.5 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-[#8b90f8]/40;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ece9f8;
+    transition: border-color 150ms ease-out;
+  }
+  .bb-exec-field:focus {
+    border-color: rgba(139, 144, 248, 0.55);
+  }
+  .bb-exec-field::placeholder {
+    color: #6f6b8a;
+  }
+  /* Timer hero card. */
+  .bb-exec-timer-card {
+    background: linear-gradient(180deg, rgba(139, 144, 248, 0.1), rgba(139, 144, 248, 0.02));
+    border: 1px solid rgba(139, 144, 248, 0.22);
+    border-radius: 18px;
+  }
+  /* Critical-step badge + tri-state measurement/tolerance pills — icon +
+     label always carries the meaning, colour is reinforcement only. */
+  .bb-exec-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .bb-exec-pill-success {
+    color: #86efac;
+    background: rgba(74, 222, 128, 0.12);
+    border: 1px solid rgba(74, 222, 128, 0.28);
+  }
+  .bb-exec-pill-warning {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.28);
+  }
+  .bb-exec-pill-danger {
+    color: #fca5a5;
+    background: rgba(248, 113, 113, 0.13);
+    border: 1px solid rgba(248, 113, 113, 0.28);
+  }
+  /* Step-progress strip in the sticky header — one segment per step. */
+  .bb-exec-progress-track {
+    background: rgba(255, 255, 255, 0.09);
+  }
+  .bb-exec-progress-dot--done {
+    background: #4ade80;
+  }
+  .bb-exec-progress-dot--current {
+    background: #8b90f8;
+    box-shadow: 0 0 0 3px rgba(139, 144, 248, 0.28);
+  }
+  /* Modal surface — a touch brighter + more elevated than .bb-exec-card so
+     it reads clearly on top of the already-dark ground. */
+  .bb-exec-modal {
+    background: linear-gradient(180deg, rgba(46, 35, 84, 0.98), rgba(25, 18, 47, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+}
+
+@layer utilities {
+  .tabular-digits {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Micro-animations                                                   */
+/*                                                                    */
+/* All timings ≤ 200ms — researchers want speed, not cinema. Defined  */
+/* outside any @layer so utility classes still apply when used inline */
+/* on Tailwind-styled elements.                                       */
+/* ------------------------------------------------------------------ */
+
+@keyframes bb-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bb-scale-in {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes bb-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bb-bounce {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.15); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bb-count-reveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Transform-based animations use `backwards` (not `both`) so the final
+   transform is not held after the animation ends. A retained transform makes
+   the element the containing block for `position: fixed` children, which
+   pushed modals opened inside animated cards/pages below the viewport. */
+.bb-animate-fade { animation: bb-fade-in 150ms ease-out both; }
+.bb-animate-scale { animation: bb-scale-in 150ms ease-out backwards; }
+.bb-animate-slide { animation: bb-slide-up 200ms ease-out backwards; }
+.bb-animate-bounce { animation: bb-bounce 400ms ease-out backwards; }
+.bb-animate-count { animation: bb-count-reveal 200ms ease-out backwards; }
+
+/* ---------------------------------------------------------------------------
+   Guided tour (driver.js) — themed to Modern Confident. Selectors use
+   `.driver-popover.benchbook-tour ...` (higher specificity than driver's own
+   single-class rules) so they win regardless of stylesheet load order.
+   --------------------------------------------------------------------------- */
+.driver-popover.benchbook-tour {
+  border-radius: 16px;
+  padding: 18px 18px 16px;
+  max-width: 320px;
+  box-shadow: 0 24px 60px -30px rgba(23, 19, 42, 0.5), 0 6px 20px -10px rgba(23, 19, 42, 0.25);
+}
+.driver-popover.benchbook-tour .driver-popover-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 17px;
+  font-weight: 600;
+  color: #17132a;
+}
+.driver-popover.benchbook-tour .driver-popover-description {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #6f6b81;
+  margin-top: 6px;
+}
+.driver-popover.benchbook-tour .driver-popover-progress-text {
+  font-size: 12px;
+  color: #9a95ac;
+}
+.driver-popover.benchbook-tour .driver-popover-navigation-btns button {
+  text-shadow: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 14px;
+}
+.driver-popover.benchbook-tour .driver-popover-next-btn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+}
+.driver-popover.benchbook-tour .driver-popover-next-btn:hover {
+  background: #4f52e0;
+}
+.driver-popover.benchbook-tour .driver-popover-prev-btn {
+  background: transparent;
+  color: #6f6b81;
+  border: none;
+}
+.driver-popover.benchbook-tour .driver-popover-close-btn {
+  color: #9a95ac;
+}

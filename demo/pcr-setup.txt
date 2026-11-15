@@ -1,0 +1,27 @@
+Standard PCR Amplification (Taq Polymerase, 50 uL Reaction)
+
+Materials
+- Taq 2X Master Mix, New England Biolabs, cat. M0270L
+- Forward primer, 10 uM
+- Reverse primer, 10 uM
+- Nuclease-free water, Invitrogen, cat. AM9937
+- Template genomic DNA
+- 0.2 mL PCR tubes
+- Thermal cycler
+- 1% agarose gel with SYBR Safe, and 1 kb Plus DNA ladder
+
+Reaction setup (on ice)
+1. Thaw master mix, primers and template on ice. Vortex primers briefly and spin down.
+2. For each reaction combine: 25 uL Taq 2X Master Mix, 1 uL forward primer, 1 uL reverse primer, template DNA (up to 1 ug), and nuclease-free water to 50 uL.
+3. Include a no-template control that replaces the template with water.
+4. Mix gently by pipetting and spin down. Record the template DNA amount added (ng).
+
+Thermal cycling
+5. Initial denaturation at 95 C for 30 seconds.
+6. Run 30 cycles of: 95 C for 30 seconds, annealing at 58 C for 30 seconds, extension at 68 C for 1 minute per kb.
+7. Final extension at 68 C for 5 minutes, then hold at 4 C.
+
+Analysis
+8. Run 5 uL of each product on a 1% agarose gel at 100 V for 40 minutes alongside the ladder.
+9. Image the gel and confirm a single band of the expected size in sample lanes and no band in the no-template control.
+10. Record the observed product size in bp.

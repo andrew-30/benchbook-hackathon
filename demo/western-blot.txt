@@ -1,0 +1,31 @@
+Western Blot - Detection of GAPDH and phospho-ERK1/2
+
+Materials
+- Precast 4-20% Mini-PROTEAN TGX gels, Bio-Rad, cat. 4561094
+- Precision Plus Protein Dual Color Standards, Bio-Rad, cat. 1610374
+- 4x Laemmli sample buffer, Bio-Rad, cat. 1610747
+- Trans-Blot Turbo PVDF transfer pack, Bio-Rad, cat. 1704156
+- Tris-buffered saline with 0.1% Tween-20 (TBST)
+- 5% non-fat dry milk in TBST (blocking buffer)
+- Anti-phospho-ERK1/2 rabbit monoclonal antibody, Cell Signaling Technology, cat. 4370
+- Anti-GAPDH mouse monoclonal antibody, Cell Signaling Technology, cat. 97166
+- HRP-linked anti-rabbit IgG, Cell Signaling Technology, cat. 7074
+- Clarity Western ECL substrate, Bio-Rad, cat. 1705060
+
+Day 1 - Electrophoresis and transfer
+1. Dilute 20 ug of each lysate (concentration from the BCA assay) in 4x Laemmli buffer to a final 1x.
+2. Heat samples at 95 C for 5 minutes, then spin down briefly.
+3. Load 5 uL of protein ladder and 20 uL of each sample into the gel.
+4. Run the gel at 150 V for 45 minutes, until the dye front reaches the bottom.
+5. Transfer to PVDF using the Trans-Blot Turbo, standard program, 25 V for 7 minutes.
+6. Confirm transfer by checking that the prestained ladder is visible on the membrane.
+7. Block the membrane in 5% milk/TBST for 1 hour at room temperature with gentle rocking.
+8. Incubate with anti-phospho-ERK1/2 (1:2000 in 5% BSA/TBST) overnight at 4 C.
+
+Day 2 - Detection
+9. Wash the membrane 3 times for 5 minutes each in TBST.
+10. Incubate with HRP-linked anti-rabbit IgG (1:3000 in 5% milk/TBST) for 1 hour at room temperature.
+11. Wash 3 times for 5 minutes each in TBST.
+12. Apply ECL substrate for 5 minutes and image on a chemiluminescence imager. Record the exposure time in seconds.
+13. Strip and re-probe with anti-GAPDH (1:5000) as a loading control, repeating steps 9-12.
+14. Record the phospho-ERK / GAPDH band intensity ratio for the treated sample.
